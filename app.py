@@ -4,7 +4,7 @@ from pymongo import MongoClient
 
 tmpl_dir = os.path.join(os.path.dirname(os.path.abspath(__file__)), 'templates')
 app = Flask(__name__)
-client = MongoClient('localhost', 27017)
+#client = MongoClient('localhost', 27017)
 
 @app.route('/')
 @app.route('/index')
