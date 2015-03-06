@@ -2,27 +2,30 @@
 <html>
 <head>
   <title>CoRE Manager</title>
-  <script src="https://apis.google.com/js/client:platform.js" async defer></script>
-  <script src="//ajax.googleapis.com/ajax/libs/jquery/1.8.2/jquery.min.js" ></script>
+  <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='assets/css/style.css') }}" />
+  <meta name="google-signin-clientid" content="615316435724-k7gu8chlmqc3gkuru56bamcr4f9pv7sm.apps.googleusercontent.com" />
+  <meta name="google-signin-scope" content="https://www.googleapis.com/auth/plus.login profile email" />
+  <meta name="google-signin-requestvisibleactions" content="http://schema.org/AddAction" />
+  <meta name="google-signin-cookiepolicy" content="single_host_origin" />
+  <meta name="google-signin-callback" content="onSignInCallback" />
+  <link href="http://fonts.googleapis.com/css?family=Roboto:300,400" rel="stylesheet" type="text/css">
+  <script src="https://apis.google.com/js/client:platform.js?onload=render" async defer>
+
+  /* Executed when the APIs finish loading */
+  function render() {
+    gapi.signin.render('g-signin', {
+      'theme': 'dark'
+    });
+  }
+  </script>
+  <script src="//ajax.googleapis.com/ajax/libs/jquery/1.8.2/jquery.min.js"></script>
 </head>
 <body>
   <div id="gConnect">
-    <button class="g-signin"
-        data-scope="https://www.googleapis.com/auth/plus.login profile email"
-        data-clientId="615316435724-k7gu8chlmqc3gkuru56bamcr4f9pv7sm.apps.googleusercontent.com"
-        data-callback="onSignInCallback"
-        data-theme="dark"
-        data-cookiepolicy="single_host_origin">
-    </button>
-  </div>
-  <div id="authOps" style="display:none">
-
-    <h2>Authenticated User Information:</h2>
+    <h1 id="welcome">CoRE Manager</h1>
+    <button class="g-signin">&nbsp;</button>
     <div id="userInfo"></div>
-    <button id="disconnect" >Disconnect your Google account from this app</button>
-
-    <h2>Authentication Logs</h2>
-    <pre id="authResult"></pre>
+    <button id="disconnect" style="display:none;">Disconnect your Google account from this app</button>
   </div>
   <div id="loaderror"></div>
 <script type="text/javascript">
@@ -38,19 +41,15 @@
      */
     onSignInCallback: function(authResult) {
       gapi.client.load('plus','v1').then(function() {
-        $('#authResult').html('Auth Result:<br/>');
-        for (var field in authResult) {
-          $('#authResult').append(' ' + field + ': ' +
-              authResult[field] + '<br/>');
-        }
         if (authResult['access_token']) {
-          $('#authOps').show('slow');
-          $('#gConnect').hide();
+          $('button.g-signin').hide();
+          $('#disconnect').show();
+          $('#welcome').hide();
+          $('#welcome').empty();
           helper.profile();
         } else if (authResult['error']) {
-          $('#authResult').append('Logged out');
-          $('#authOps').hide('slow');
-          $('#gConnect').show();
+          $('#button.g-signin').show();
+          $('#disconnect').hide();
         }
       });
     },
@@ -64,19 +63,14 @@
       }).then(function(res) {
         console.log('res', res);
         var profile = res.result;
-        $('#userInfo').empty();
-        $('#userInfo').append(
-            $('<p><img src=\"' + profile.image.url + '\"></p>'));
-        $('#userInfo').append('<p>Hello ' + profile.displayName + '!');
-        if (profile.cover && profile.coverPhoto) {
-          $('#userInfo').append('<p><img src=\"' + profile.cover.coverPhoto.url + '\"></p>');
-        }
+        $('#welcome').text("Welcome back, " + profile.displayName + '!');
 
         var primaryEmail;
         for (var i=0; i < profile.emails.length; i++) {
           if (profile.emails[i].type === 'account') primaryEmail = profile.emails[i].value;
         }
         $("#userInfo").append('<p>Primary email: ' + primaryEmail + '</p>');
+        $("#welcome").show();
       }, function(err) {
         var error = err.result;
         $('#userInfo').empty();
@@ -97,10 +91,7 @@
         dataType: 'jsonp',
         success: function(result) {
           console.log('revoke response: ' + result);
-          $('#authOps').hide();
-          $('#userInfo').empty();
-          $('#authResult').empty();
-          $('#gConnect').show();
+          location.reload();
         }
       });
     }

@@ -1,0 +1,63 @@
+html {
+    height: 100%;
+}
+
+body {
+    height: 100%;
+    margin: 0;
+    background-repeat: no-repeat;
+    background-attachment: fixed;
+
+	/* IE10 Consumer Preview */ 
+	background-image: -ms-radial-gradient(center bottom, circle closest-corner, #ABFFF9 0%, #004B6E 100%);
+
+	/* Mozilla Firefox */ 
+	background-image: -moz-radial-gradient(center bottom, circle closest-corner, #ABFFF9 0%, #004B6E 100%);
+
+	/* Opera */ 
+	background-image: -o-radial-gradient(center bottom, circle closest-corner, #ABFFF9 0%, #004B6E 100%);
+
+	/* Webkit (Safari/Chrome 10) */ 
+	background-image: -webkit-gradient(radial, center bottom, 0, center bottom, 477, color-stop(0, #ABFFF9), color-stop(1, #004B6E));
+
+	/* Webkit (Chrome 11+) */ 
+	background-image: -webkit-radial-gradient(center bottom, circle closest-corner, #ABFFF9 0%, #004B6E 100%);
+
+	/* W3C Markup, IE10 Release Preview */ 
+	background-image: radial-gradient(circle closest-corner at center bottom, #ABFFF9 0%, #004B6E 100%);
+	}
+
+#gConnect {
+	position: fixed;
+	top: 50%;
+	left: 50%;
+	margin: -142.5px 0 -235.5px;
+}
+
+h1#welcome {
+	font-family: 'Roboto', sans-serif;
+	font-size: 72px;
+	font-weight: 300;
+	color: #fff;
+	display: block;
+	padding: 0 0 100px 0;
+	margin-left: -230px;
+}
+
+.g-signin {
+	background: url('../img/g-base.png');
+	background-repeat: no-repeat;
+	width: 492px;
+	height: 108px;
+	border: 0;
+	margin: -54px 0 0 -246px;
+	cursor: pointer;
+}
+
+.g-signin:hover {
+	background: url('../img/g-hover.png');
+}
+
+.g-signin:active {
+	background: url('../img/g-press.png');
+}
