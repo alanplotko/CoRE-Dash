@@ -8,7 +8,7 @@
 <body>
   <div id="gConnect">
     <button class="g-signin"
-        data-scope="https://www.googleapis.com/auth/plus.login https://www.googleapis.com/auth/plus.profile.emails.read"
+        data-scope="https://www.googleapis.com/auth/plus.login profile email"
         data-clientId="615316435724-k7gu8chlmqc3gkuru56bamcr4f9pv7sm.apps.googleusercontent.com"
         data-callback="onSignInCallback"
         data-theme="dark"
@@ -16,27 +16,15 @@
     </button>
   </div>
   <div id="authOps" style="display:none">
-    <h2>User is now signed in to the app using Google+</h2>
-    <p>If the user chooses to disconnect, the app must delete all stored
-    information retrieved from Google for the given user.</p>
+
+    <h2>Authenticated User Information:</h2>
+    <div id="userInfo"></div>
     <button id="disconnect" >Disconnect your Google account from this app</button>
-
-    <h2>User's email information</h2>
-    <div id="email"></div>
-
-    <h2>User's profile information</h2>
-    <div id="profile"></div>
 
     <h2>Authentication Logs</h2>
     <pre id="authResult"></pre>
   </div>
-  <div id="loaderror">
-    This section will be hidden by JQuery. If you can see this message, you
-    may be viewing the file rather than running a web server.<br />
-    The sample must be run from http or https. See instructions at
-    <a href="https://developers.google.com/+/quickstart/javascript">
-    https://developers.google.com/+/quickstart/javascript</a>.
-  </div>
+  <div id="loaderror"></div>
 <script type="text/javascript">
   var helper = (function() {
   var BASE_API_PATH = 'plus/v1/';
@@ -64,7 +52,35 @@
           $('#authOps').hide('slow');
           $('#gConnect').show();
         }
-        console.log('authResult', authResult);
+      });
+    },
+
+    /**
+     * Gets and renders the currently signed in user's profile data.
+     */
+    profile: function(){
+      gapi.client.plus.people.get({
+        'userId': 'me'
+      }).then(function(res) {
+        console.log('res', res);
+        var profile = res.result;
+        $('#userInfo').empty();
+        $('#userInfo').append(
+            $('<p><img src=\"' + profile.image.url + '\"></p>'));
+        $('#userInfo').append('<p>Hello ' + profile.displayName + '!');
+        if (profile.cover && profile.coverPhoto) {
+          $('#userInfo').append('<p><img src=\"' + profile.cover.coverPhoto.url + '\"></p>');
+        }
+
+        var primaryEmail;
+        for (var i=0; i < profile.emails.length; i++) {
+          if (profile.emails[i].type === 'account') primaryEmail = profile.emails[i].value;
+        }
+        $("#userInfo").append('<p>Primary email: ' + primaryEmail + '</p>');
+      }, function(err) {
+        var error = err.result;
+        $('#userInfo').empty();
+        $('#userInfo').append(error.message);
       });
     },
 
@@ -82,42 +98,10 @@
         success: function(result) {
           console.log('revoke response: ' + result);
           $('#authOps').hide();
-          $('#profile').empty();
-          $('#visiblePeople').empty();
+          $('#userInfo').empty();
           $('#authResult').empty();
           $('#gConnect').show();
         }
-      });
-    },
-
-    /**
-     * Gets and renders the currently signed in user's profile data.
-     */
-    profile: function(){
-      gapi.client.plus.people.get({
-        'userId': 'me'
-      }).then(function(res) {
-        var profile = res.result;
-        $('#profile').empty();
-        $('#profile').append(
-            $('<p><img src=\"' + profile.image.url + '\"></p>'));
-        $('#profile').append(
-            $('<p>Hello ' + profile.displayName + '!<br />Tagline: ' +
-            profile.tagline + '<br />About: ' + profile.aboutMe + '</p>'));
-        if (profile.cover && profile.coverPhoto) {
-          $('#profile').append(
-              $('<p><img src=\"' + profile.cover.coverPhoto.url + '\"></p>'));
-        }
-
-        var primaryEmail;
-        for (var i=0; i < profile.emails.length; i++) {
-          if (profile.emails[i].type === 'account') primaryEmail = profile.emails[i].value;
-        }
-        $("#email").text('Primary email: ' + primaryEmail);
-      }, function(err) {
-        var error = err.result;
-        $('#profile').empty();
-        $('#profile').append(error.message);
       });
     }
   };
