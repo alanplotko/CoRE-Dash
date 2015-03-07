@@ -1,120 +1,118 @@
-<!DOCTYPE html>
-<html>
-<head>
-  <title>CoRE Manager</title>
-  <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='assets/css/style.css') }}" />
-  <meta name="google-signin-clientid" content="615316435724-k7gu8chlmqc3gkuru56bamcr4f9pv7sm.apps.googleusercontent.com" />
-  <meta name="google-signin-scope" content="https://www.googleapis.com/auth/plus.login profile email" />
-  <meta name="google-signin-requestvisibleactions" content="http://schema.org/AddAction" />
-  <meta name="google-signin-cookiepolicy" content="single_host_origin" />
-  <meta name="google-signin-callback" content="onSignInCallback" />
-  <link href="http://fonts.googleapis.com/css?family=Roboto:300,400" rel="stylesheet" type="text/css">
-  <script src="https://apis.google.com/js/client:platform.js?onload=render" async defer>
+<!doctype html>
+<html class="no-js" lang="en">
+  <head>
+    
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="google-signin-clientid" content="615316435724-k7gu8chlmqc3gkuru56bamcr4f9pv7sm.apps.googleusercontent.com" />
+    <meta name="google-signin-scope" content="https://www.googleapis.com/auth/plus.login profile email" />
+    <meta name="google-signin-requestvisibleactions" content="http://schema.org/AddAction" />
+    <meta name="google-signin-cookiepolicy" content="single_host_origin" />
+    <meta name="google-signin-callback" content="onSignInCallback" />
+    
+    <title>CoRE Manager</title>
+    
+    <link rel="stylesheet" href="{{ url_for('static', filename='assets/css/foundation.min.css') }}" />
+    <link rel="stylesheet" href="{{ url_for('static', filename='assets/css/style.css') }}" />
+    <link href="http://fonts.googleapis.com/css?family=Roboto:100,400" rel="stylesheet" type="text/css">
+    <link rel="shortcut icon" href="{{ url_for('static', filename='assets/favicon.ico') }}" />
+    
+    <script src="{{ url_for('static', filename='assets/js/vendor/modernizr.js') }}"></script>
+    <script src="https://apis.google.com/js/client:platform.js?onload=render" async defer>
+      /* Executed when the APIs finish loading */
+      function render() {
+        gapi.signin.render('g-signin', {
+          'theme': 'dark'
+        });
+      }
+    </script>
+  </head>
+  <body>
+    
+    <div class="row">
+      <div id="content" class="large-12 columns">
+        <h1 id="welcome">CoRE Manager</h1>
+        <div class="g-signin">&nbsp;</div>
+        <div id="userInfo"></div>
+        <button id="disconnect" class="button alert" style="display:none;">Disconnect your Google account from this app</button>
+        <div id="loaderror"></div>
+      </div>
+    </div>
+    
+    <script src="{{ url_for('static', filename='assets/js/vendor/jquery.js') }}"></script>
+    <script src="{{ url_for('static', filename='assets/js/foundation.min.js') }}"></script>
+    <script>
+      $(document).foundation();
 
-  /* Executed when the APIs finish loading */
-  function render() {
-    gapi.signin.render('g-signin', {
-      'theme': 'dark'
-    });
-  }
-  </script>
-  <script src="//ajax.googleapis.com/ajax/libs/jquery/1.8.2/jquery.min.js"></script>
-</head>
-<body>
-  <div id="gConnect">
-    <h1 id="welcome">CoRE Manager</h1>
-    <button class="g-signin">&nbsp;</button>
-    <div id="userInfo"></div>
-    <button id="disconnect" style="display:none;">Disconnect your Google account from this app</button>
-  </div>
-  <div id="loaderror"></div>
-<script type="text/javascript">
-  var helper = (function() {
-  var BASE_API_PATH = 'plus/v1/';
+      var helper = (function() {
+        var BASE_API_PATH = 'plus/v1/';
 
-  return {
-    /**
-     * Hides the sign in button and starts the post-authorization operations.
-     *
-     * @param {Object} authResult An Object which contains the access token and
-     *   other authentication information.
-     */
-    onSignInCallback: function(authResult) {
-      gapi.client.load('plus','v1').then(function() {
-        if (authResult['access_token']) {
-          $('button.g-signin').hide();
-          $('#disconnect').show();
-          $('#welcome').hide();
-          $('#welcome').empty();
-          helper.profile();
-        } else if (authResult['error']) {
-          $('#button.g-signin').show();
-          $('#disconnect').hide();
-        }
+        return {
+          onSignInCallback: function(authResult) {
+            gapi.client.load('plus','v1').then(function() {
+              if (authResult['access_token']) {
+                $('#content').fadeOut('slow', function() {
+                  $('.g-signin').hide();
+                  $('#welcome').empty();
+                  $.when(helper.profile()).then(function()
+                  {
+                    $('#content').fadeIn('slow');
+                  });
+                });
+              } else if (authResult['error']) {
+                $('#button.g-signin').show();
+              }
+            });
+          },
+
+          profile: function(){
+            gapi.client.plus.people.get({
+              'userId': 'me'
+            }).then(function(res) {
+              console.log('res', res);
+              $('#disconnect').show();
+              
+              var profile = res.result;
+              $('#welcome').text("Welcome back, " + profile.displayName + '!');
+              
+              var primaryEmail;
+              for (var i=0; i < profile.emails.length; i++) {
+                if (profile.emails[i].type === 'account') primaryEmail = profile.emails[i].value;
+              }
+              
+              $("#userInfo").append('<p>Primary email: ' + primaryEmail + '</p>');
+              $("#content").css('margin-top', (-1 * $("#content").height()/2) + 'px');
+            }, function(err) {
+              var error = err.result;
+              $('#userInfo').empty();
+              $('#userInfo').append(error.message);
+            });
+          },
+
+          disconnect: function() {
+            // Revoke the access token.
+            $.ajax({
+              type: 'GET',
+              url: 'https://accounts.google.com/o/oauth2/revoke?token=' + gapi.auth.getToken().access_token,
+              async: false,
+              contentType: 'application/json',
+              dataType: 'jsonp',
+              success: function(result) {
+                location.reload();
+              }
+            });
+          }
+        };
+      })();
+
+      $(document).ready(function() {
+        $('#disconnect').click(helper.disconnect);
+        $('#loaderror').hide();
       });
-    },
 
-    /**
-     * Gets and renders the currently signed in user's profile data.
-     */
-    profile: function(){
-      gapi.client.plus.people.get({
-        'userId': 'me'
-      }).then(function(res) {
-        console.log('res', res);
-        var profile = res.result;
-        $('#welcome').text("Welcome back, " + profile.displayName + '!');
-
-        var primaryEmail;
-        for (var i=0; i < profile.emails.length; i++) {
-          if (profile.emails[i].type === 'account') primaryEmail = profile.emails[i].value;
-        }
-        $("#userInfo").append('<p>Primary email: ' + primaryEmail + '</p>');
-        $("#welcome").show();
-      }, function(err) {
-        var error = err.result;
-        $('#userInfo').empty();
-        $('#userInfo').append(error.message);
-      });
-    },
-
-    /**
-     * Calls the OAuth2 endpoint to disconnect the app for the user.
-     */
-    disconnect: function() {
-      // Revoke the access token.
-      $.ajax({
-        type: 'GET',
-        url: 'https://accounts.google.com/o/oauth2/revoke?token=' + gapi.auth.getToken().access_token,
-        async: false,
-        contentType: 'application/json',
-        dataType: 'jsonp',
-        success: function(result) {
-          console.log('revoke response: ' + result);
-          location.reload();
-        }
-      });
-    }
-  };
-})();
-
-/**
- * jQuery initialization
- */
-$(document).ready(function() {
-  $('#disconnect').click(helper.disconnect);
-  $('#loaderror').hide();
-});
-
-/**
- * Calls the helper method that handles the authentication flow.
- *
- * @param {Object} authResult An Object which contains the access token and
- *   other authentication information.
- */
-function onSignInCallback(authResult) {
-  helper.onSignInCallback(authResult);
-}
-</script>
-</body>
+      function onSignInCallback(authResult) {
+        helper.onSignInCallback(authResult);
+      }
+    </script>
+  </body>
 </html>
