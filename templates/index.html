@@ -30,6 +30,10 @@
   <body>
     
     <div class="row">
+      <div class="spinner">
+        <div class="dot1"></div>
+        <div class="dot2"></div>
+      </div>
       <div id="content" class="large-12 columns">
         <h1 id="welcome">CoRE Manager</h1>
         <div class="g-signin">&nbsp;</div>
@@ -44,9 +48,20 @@
     <script>
       $(document).foundation();
 
+      function resize() {
+        $("#content").css('margin', (-1 * $("#content").height()/2) + 'px 0 0 ' + ((-1 * $("#content").width()/2)-15) + 'px');
+      }
+
+      $.when(resize()).then(function() {
+        $("#content").fadeIn();
+      });
+
+      $(window).resize(function() {
+        resize();
+      });
+
       var helper = (function() {
         var BASE_API_PATH = 'plus/v1/';
-
         return {
           onSignInCallback: function(authResult) {
             gapi.client.load('plus','v1').then(function() {
