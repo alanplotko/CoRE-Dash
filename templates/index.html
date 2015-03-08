@@ -30,16 +30,12 @@
   <body>
     
     <div class="row">
-      <div class="spinner">
-        <div class="dot1"></div>
-        <div class="dot2"></div>
-      </div>
       <div id="content" class="large-12 columns">
-        <h1 id="welcome">CoRE Manager</h1>
+        <h1 id="welcome">{{ msg }}</h1>
+        <div id="spinner"><img src="{{ url_for('static', filename='assets/img/gears.svg') }}" /></div>
         <div class="g-signin">&nbsp;</div>
-        <div id="userInfo"></div>
         <button id="disconnect" class="button alert" style="display:none;">Disconnect your Google account from this app</button>
-        <div id="loaderror"></div>
+        <div id="error"></div>
       </div>
     </div>
     
@@ -49,7 +45,7 @@
       $(document).foundation();
 
       function resize() {
-        $("#content").css('margin', (-1 * $("#content").height()/2) + 'px 0 0 ' + ((-1 * $("#content").width()/2)-15) + 'px');
+        $("#content").css('margin', (-1 * $("#content").height()/2) + 'px 0 0 ' + ((-1 * $("#content").width()/2)-30) + 'px');
       }
 
       $.when(resize()).then(function() {
@@ -60,6 +56,8 @@
         resize();
       });
 
+      var name, primaryEmail;
+
       var helper = (function() {
         var BASE_API_PATH = 'plus/v1/';
         return {
@@ -69,10 +67,8 @@
                 $('#content').fadeOut('slow', function() {
                   $('.g-signin').hide();
                   $('#welcome').empty();
-                  $.when(helper.profile()).then(function()
-                  {
-                    $('#content').fadeIn('slow');
-                  });
+                  helper.profile();
+                  $('#content').fadeIn('slow');
                 });
               } else if (authResult['error']) {
                 $('#button.g-signin').show();
@@ -83,24 +79,40 @@
           profile: function(){
             gapi.client.plus.people.get({
               'userId': 'me'
-            }).then(function(res) {
-              console.log('res', res);
-              $('#disconnect').show();
-              
+            }).then(function(res) {              
               var profile = res.result;
-              $('#welcome').text("Welcome back, " + profile.displayName + '!');
-              
-              var primaryEmail;
+              name = profile.displayName;
+              $('#welcome').text("Welcome back, " + name.split(" ")[0] + "!");
+
               for (var i=0; i < profile.emails.length; i++) {
                 if (profile.emails[i].type === 'account') primaryEmail = profile.emails[i].value;
               }
-              
-              $("#userInfo").append('<p>Primary email: ' + primaryEmail + '</p>');
-              $("#content").css('margin-top', (-1 * $("#content").height()/2) + 'px');
+
+              $("#content").css('margin-top', (-1 * $("#content").height()/2 - 84) + 'px');
+              $('#spinner').delay(1000).fadeIn('slow');
             }, function(err) {
               var error = err.result;
-              $('#userInfo').empty();
-              $('#userInfo').append(error.message);
+              $('#error').append(error.message);
+            }).then(function() {
+              function authenticate() {
+                helper.authenticate(primaryEmail, name);
+              }
+              window.setTimeout( authenticate, 5000 );
+            });
+          },
+
+          authenticate: function(email, name) {
+            $.ajax({
+              url: "/authenticate",
+              type: "POST",
+              contentType: "application/json",
+              data: JSON.stringify  ({
+                "email": email,
+                "name": name
+              }),
+              success: function(result) {
+                window.location.replace(result);
+              }
             });
           },
 
@@ -122,7 +134,7 @@
 
       $(document).ready(function() {
         $('#disconnect').click(helper.disconnect);
-        $('#loaderror').hide();
+        $('#error').hide();
       });
 
       function onSignInCallback(authResult) {
