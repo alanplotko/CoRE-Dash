@@ -4,13 +4,8 @@
     
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <meta name="google-signin-clientid" content="615316435724-k7gu8chlmqc3gkuru56bamcr4f9pv7sm.apps.googleusercontent.com" />
-    <meta name="google-signin-scope" content="https://www.googleapis.com/auth/plus.login profile email" />
-    <meta name="google-signin-requestvisibleactions" content="http://schema.org/AddAction" />
-    <meta name="google-signin-cookiepolicy" content="single_host_origin" />
-    <meta name="google-signin-callback" content="onSignInCallback" />
     
-    <title>CoRE Manager</title>
+    <title>CoRE Dashboard</title>
     
     <link rel="stylesheet" href="{{ url_for('static', filename='assets/css/foundation.min.css') }}" />
     <link rel="stylesheet" href="{{ url_for('static', filename='assets/css/style.css') }}" />
@@ -18,37 +13,19 @@
     <link rel="shortcut icon" href="{{ url_for('static', filename='assets/favicon.ico') }}" />
     
     <script src="{{ url_for('static', filename='assets/js/vendor/modernizr.js') }}"></script>
-    <script src="https://apis.google.com/js/client:platform.js?onload=render" async defer>
-      /* Executed when the APIs finish loading */
-      function render() {
-        gapi.signin.render('g-signin', {
-          'theme': 'dark'
-        });
-      }
-    </script>
   </head>
   <body>
     
     <div class="row">
       <div id="content" class="large-12 columns">
-        <h1 id="welcome">{{ msg }}</h1>
-        <div id="spinner"><img src="{{ url_for('static', filename='assets/img/gears.svg') }}" /></div>
-        <div class="g-signin">&nbsp;</div>
-        <button id="disconnect" class="button alert" style="display:none;">Disconnect your Google account from this app</button>
-        <div id="error"></div>
+        TEST
       </div>
     </div>
     
     <script src="{{ url_for('static', filename='assets/js/vendor/jquery.js') }}"></script>
     <script src="{{ url_for('static', filename='assets/js/foundation.min.js') }}"></script>
-    <script src="{{ url_for('static', filename='assets/js/signin.js') }}"></script>
     <script>
       $(document).foundation();
-
-      $(document).ready(function() {
-        $('#disconnect').click(helper.disconnect);
-        $('#error').hide();
-      });
       
       function resize() {
         $("#content").css('margin', (-1 * $("#content").height()/2) + 'px 0 0 ' + ((-1 * $("#content").width()/2)-30) + 'px');

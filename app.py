@@ -32,8 +32,20 @@ def authenticate():
 				"name": name,
 				"email": email
 			})
-		return url_for('login')
+		return url_for('dashboard')
 
-@app.route('/login')
-def login():
-	return render_template('login.html', template_folder=tmpl_dir)
+@app.route('/dashboard')
+def dashboard():
+	return render_template('dashboard.html', template_folder=tmpl_dir)
+
+@app.errorhandler(500)
+def internal_server(e):
+    return render_template('error.html', template_folder=tmpl_dir, error=500, error_msg="Internal Server Error", 
+    	return_home="The gears must have gotten stuck. Let us know if it happens again!"	
+    )
+
+@app.errorhandler(404)
+def page_not_found(e):
+    return render_template('error.html', template_folder=tmpl_dir, error=404, error_msg="Page Not Found",
+    	return_home="We can't find what you're looking for."
+    )

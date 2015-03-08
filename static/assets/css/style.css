@@ -38,12 +38,29 @@ body {
 	font-weight: bold;
 }
 
-h1#welcome {
+h1#welcome, h1#error_code, h2#return_home {
 	font-family: 'Roboto', sans-serif;
-	font-size: 72px;
 	font-weight: 100;
 	color: #fff;
 	display: block;
+}
+
+h1#welcome { font-size: 72px; }
+h2#return_home { font-size: 28px; font-weight: 300; }
+
+h1#error_code {
+	font-size: 54px;
+	display: inline-block;
+	font-weight: 100;
+	border-bottom: 1px solid #fff;
+	margin: 20px;
+}
+
+a#turnAround {
+	font-family: 'Roboto', sans-serif;
+	font-weight: 400;
+	font-size: 24px;
+	margin: 20px;
 }
 
 .g-signin {
