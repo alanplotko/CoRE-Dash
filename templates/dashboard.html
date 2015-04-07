@@ -8,17 +8,17 @@
     <title>CoRE Dashboard</title>
     
     <link rel="stylesheet" href="{{ url_for('static', filename='assets/css/foundation.min.css') }}" />
-    <link rel="stylesheet" href="{{ url_for('static', filename='assets/css/style.css') }}" />
+    <link rel="stylesheet" href="{{ url_for('static', filename='assets/css/dashboard.css') }}" />
     <link href="http://fonts.googleapis.com/css?family=Roboto:100,400" rel="stylesheet" type="text/css">
     <link rel="shortcut icon" href="{{ url_for('static', filename='assets/favicon.ico') }}" />
     
     <script src="{{ url_for('static', filename='assets/js/vendor/modernizr.js') }}"></script>
   </head>
   <body>
+    {% include 'includes/nav.html' %}
     
     <div class="row">
       <div id="content" class="large-12 columns">
-        TEST
       </div>
     </div>
     
@@ -26,7 +26,7 @@
     <script src="{{ url_for('static', filename='assets/js/foundation.min.js') }}"></script>
     <script>
       $(document).foundation();
-      
+
       function resize() {
         $("#content").css('margin', (-1 * $("#content").height()/2) + 'px 0 0 ' + ((-1 * $("#content").width()/2)-30) + 'px');
       }

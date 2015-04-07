@@ -1,82 +1,102 @@
-html {
+html, body {
     height: 100%;
 }
 
 body {
-    background-repeat: no-repeat;
-    background-attachment: fixed;
-
-	/* IE10 Consumer Preview */ 
-	background-image: -ms-radial-gradient(center bottom, circle closest-corner, #ABFFF9 0%, #004B6E 100%);
-
-	/* Mozilla Firefox */ 
-	background-image: -moz-radial-gradient(center bottom, circle closest-corner, #ABFFF9 0%, #004B6E 100%);
-
-	/* Opera */ 
-	background-image: -o-radial-gradient(center bottom, circle closest-corner, #ABFFF9 0%, #004B6E 100%);
-
-	/* Webkit (Safari/Chrome 10) */ 
-	background-image: -webkit-gradient(radial, center bottom, 0, center bottom, 477, color-stop(0, #ABFFF9), color-stop(1, #004B6E));
-
-	/* Webkit (Chrome 11+) */ 
-	background-image: -webkit-radial-gradient(center bottom, circle closest-corner, #ABFFF9 0%, #004B6E 100%);
-
-	/* W3C Markup, IE10 Release Preview */ 
-	background-image: radial-gradient(circle closest-corner at center bottom, #ABFFF9 0%, #004B6E 100%);
+    background-color: #FBFBFB;
 }
 
-#content {
-	display: none;
-	text-align: center;
-	position: absolute;
-	top: 50%;
-	left: 50%;
-} 
+/*--------------
+	Navigation
+----------------*/
 
-#disconnect {
+nav {
+	background-color: #50A0AF;
+	padding: 0 10px;
+}
+
+nav .brand-logo {
 	font-family: 'Roboto', sans-serif;
-	font-weight: bold;
+	font-weight: 300;
 }
 
-h1#welcome, h1#error_code, h2#return_home {
+nav .nav-wrapper i {
+	display: inline-block;
+	padding-right: 5px;
+	vertical-align: top;
+}
+
+ul.side-nav li.home:hover {
+  background-color: inherit;
+}
+
+ul.side-nav li.home {
 	font-family: 'Roboto', sans-serif;
-	font-weight: 100;
-	color: #fff;
-	display: block;
+	font-weight: 400;
+	color: #000;
+	font-size: 24px;
 }
 
-h1#welcome { font-size: 72px; }
-h2#return_home { font-size: 28px; font-weight: 300; }
+ul.side-nav a {
+	font-family: 'Roboto', sans-serif;
+	font-weight: 300;
+	font-size: 18px;
+}
+
+nav ul a {
+	font-family: 'Roboto', sans-serif;
+	font-weight: 400;
+	font-size: 1.2rem;
+}
+
+/*--------------
+	Front Page
+----------------*/
+
+#welcome {
+	width: 700px;
+	height: calc(100vh - 64px);
+}
+
+#welcome p {
+	font-family: 'Roboto', sans-serif;
+	font-size: 24px;
+}
+
+#welcome img {
+	width: inherit;
+	border-bottom: 1px solid #000;
+}
+
+/*--------------
+	Error Page
+----------------*/
 
 h1#error_code {
+	font-family: 'Roboto', sans-serif;
 	font-size: 54px;
-	display: inline-block;
-	font-weight: 100;
-	border-bottom: 1px solid #fff;
-	margin: 20px;
+	font-weight: 400;
+	margin: 0;
+	padding: 0;
+}
+
+h2#return_home {
+	font-family: 'Roboto', sans-serif;
+	font-size: 28px;
+	font-weight: 300;
+	margin: 0;
 }
 
 a#turnAround {
+	margin-top: 30px;
 	font-family: 'Roboto', sans-serif;
-	font-weight: 400;
-	font-size: 24px;
-	margin: 20px;
+	font-size: 18px;
+	font-weight: 600;
 }
 
-.g-signin {
-    background-image: url('../img/g-spritesheet.png');
-    background-repeat: no-repeat;
-    background-position: -5px -5px;
-    display: inline-block;
-    width: 492px;
-    height: 108px;
-	border: 0;
-	cursor: pointer;
-	outline: none;
-}
-
-.g-signin:hover { background-position: -5px -123px; }
-.g-signin:active { background-position: -5px -241px; }
+/*--------------
+	Spinner
+----------------*/
 
 #spinner {
 	display: none;

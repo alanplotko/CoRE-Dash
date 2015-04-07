@@ -1,44 +1,19 @@
 <!doctype html>
 <html class="no-js" lang="en">
-  <head>
-    
-    <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    
-    <title>CoRE | Error {{ error }}</title>
-    
-    <link rel="stylesheet" href="{{ url_for('static', filename='assets/css/foundation.min.css') }}" />
-    <link rel="stylesheet" href="{{ url_for('static', filename='assets/css/style.css') }}" />
-    <link href="http://fonts.googleapis.com/css?family=Roboto:100,300" rel="stylesheet" type="text/css">
-    <link rel="shortcut icon" href="{{ url_for('static', filename='assets/favicon.ico') }}" />
-    
-    <script src="{{ url_for('static', filename='assets/js/vendor/modernizr.js') }}"></script>
-  </head>
-  <body>
-    
-    <div class="row">
-      <div id="content" class="large-12 columns">
-        <h1 id="error_code">Error {{ error }}: {{ error_msg }}</h1>
-        <h2 id="return_home">{{ return_home }}</h2>
-        <a id="turnAround" class="button" href="{{ url_for('index') }}" >Turn around?</a>
+  {% with title="CoREdash | Error" %}{% include 'includes/head.html' %}{% endwith %}<head>
+  <body class="valign-wrapper">
+    <div id="content" class="container valign">
+      <h1 id="error_code" class="center-align">Error {{ error }}: {{ error_msg }}</h1>
+      <hr />
+      <h2 id="return_home" class="center-align">{{ return_home }}</h2>
+      <div class="center-align">
+        <a id="turnAround" class="waves-effect waves-light btn" href="{{ url_for('index') }}"><i class="mdi-navigation-arrow-back left"></i>Turn around?</a>
       </div>
     </div>
-    
-    <script src="{{ url_for('static', filename='assets/js/vendor/jquery.js') }}"></script>
-    <script src="{{ url_for('static', filename='assets/js/foundation.min.js') }}"></script>
+    <script src="{{ url_for('static', filename='assets/js/signin.js') }}"></script>
     <script>
-      $(document).foundation();
-
-      function resize() {
-        $("#content").css('margin', (-1 * $("#content").height()/2) + 'px 0 0 ' + ((-1 * $("#content").width()/2)-30) + 'px');
-      }
-
-      $.when(resize()).then(function() {
-        $("#content").fadeIn();
-      });
-
-      $(window).resize(function() {
-        resize();
+      $(document).ready(function() {
+        $('#disconnect').click(helper.disconnect);
       });
     </script>
   </body>
