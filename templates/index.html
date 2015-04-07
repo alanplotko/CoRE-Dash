@@ -4,10 +4,14 @@
   <body>
     {% include 'includes/nav.html' %}
 
-    <div id="welcome" class="container valign-wrapper">
-      <div class="row valign">
+    <div id="welcome" class="container">
+      <div class="row">
         <div class="col s12 center-align">
           <img src="{{ url_for('static', filename='assets/img/logo.png') }}" />
+        </div>
+      </div>
+      <div class="row">
+        <div class="col s12 center-align">
           <p>CoREdash provides a quick, simple means for CORE members to communicate and access important documents.</p>
           <p>Not sure what CoRE is? Check out our <a href="http://core.binghamton.edu/">website</a>!</p>
         </div>

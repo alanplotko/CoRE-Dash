@@ -54,13 +54,12 @@ nav ul a {
 ----------------*/
 
 #welcome {
-	width: 700px;
-	height: calc(100vh - 64px);
+	margin-top: 30px;
 }
 
 #welcome p {
 	font-family: 'Roboto', sans-serif;
-	font-size: 24px;
+	font-size: 28px;
 }
 
 #welcome img {
