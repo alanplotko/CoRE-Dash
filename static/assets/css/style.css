@@ -63,34 +63,28 @@ nav ul a {
 }
 
 #welcome img {
-	width: inherit;
+	width: 600px;
 	border-bottom: 1px solid #000;
 }
 
-/*--------------
-	Error Page
-----------------*/
+/* Mobile optimizations */
 
-h1#error_code {
-	font-family: 'Roboto', sans-serif;
-	font-size: 54px;
-	font-weight: 400;
-	margin: 0;
-	padding: 0;
+@media (max-width: 800px) {
+	#welcome img { width: 500px; }
+	#welcome p { font-size: 24px; }
 }
 
-h2#return_home {
-	font-family: 'Roboto', sans-serif;
-	font-size: 28px;
-	font-weight: 300;
-	margin: 0;
+@media (max-width: 600px) {
+	#welcome img { width: 400px; }
 }
 
-a#turnAround {
-	margin-top: 30px;
-	font-family: 'Roboto', sans-serif;
-	font-size: 18px;
-	font-weight: 600;
+@media (max-width: 440px) {
+	#welcome img { width: 300px; }
+	#welcome p { font-size: 20px; }
+}
+
+@media (max-width: 353px) {
+	#welcome img { display: none; }
 }
 
 /*--------------

@@ -1,0 +1,16 @@
+html, body {
+    height: 100%;
+}
+
+body {
+    background-color: #778899;
+}
+
+/*--------------
+	Login Page
+----------------*/
+
+#login .card {
+	width: 500px;
+	margin: 0 auto;
+}

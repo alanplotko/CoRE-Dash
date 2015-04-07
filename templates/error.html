@@ -1,6 +1,12 @@
 <!doctype html>
 <html class="no-js" lang="en">
-  {% with title="CoREdash | Error" %}{% include 'includes/head.html' %}{% endwith %}<head>
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>CoREdash | Error {{ error }}</title>
+    {% include 'includes/head.html' %}
+    <link rel="stylesheet" href="{{ url_for('static', filename='assets/css/error.css') }}" />
+  </head>
   <body class="valign-wrapper">
     <div id="content" class="container valign">
       <h1 id="error_code" class="center-align">Error {{ error }}: {{ error_msg }}</h1>
