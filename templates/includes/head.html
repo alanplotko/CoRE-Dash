@@ -1,0 +1,25 @@
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  
+  <title>{{ title }}</title>
+
+  <!-- Styles -->
+  <link rel="stylesheet" href="{{ url_for('static', filename='assets/css/vendor/materialize.min.css') }}">
+  <link rel="stylesheet" href="{{ url_for('static', filename='assets/css/style.css') }}" />
+
+  <!-- Favicon -->
+  <link rel="shortcut icon" href="{{ url_for('static', filename='assets/favicon.ico') }}" />
+
+  <!-- Scripts -->
+  <script src="{{ url_for('static', filename='assets/js/vendor/jquery.min.js') }}"></script>
+  <script src="{{ url_for('static', filename='assets/js/vendor/materialize.min.js') }}"></script>
+  <script src="https://apis.google.com/js/client:platform.js?onload=render" async defer>
+    /* Executed when the APIs finish loading */
+    function render() {
+      gapi.signin.render('g-signin', {
+        'theme': 'dark'
+      });
+    }
+  </script>
+</head>
