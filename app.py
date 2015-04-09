@@ -1,5 +1,5 @@
 import os
-from flask import Flask, render_template, request, redirect, url_for, session
+from flask import Flask, render_template, request, redirect, url_for, session, abort
 from flask.ext.session import Session
 from pymongo import MongoClient
 import logging
@@ -64,7 +64,16 @@ def logout():
 
 @app.route('/dashboard')
 def dashboard():
-	return render_template('dashboard.html', template_folder=tmpl_dir)
+	if session.get('logged_in', None) != None:
+		return render_template('dashboard.html', template_folder=tmpl_dir)
+	else:
+		abort(401)
+
+@app.errorhandler(401)
+def unauthorized(error):
+    return render_template('error.html', template_folder=tmpl_dir, error=401, error_msg="Unauthorized", 
+		return_home="You must be logged in to access this page!"	
+	)
 
 @app.errorhandler(500)
 def internal_server(e):
