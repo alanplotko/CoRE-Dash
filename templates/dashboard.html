@@ -1,42 +1,32 @@
 <!doctype html>
 <html class="no-js" lang="en">
   <head>
-    
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    
-    <title>CoRE Dashboard</title>
-    
-    <link rel="stylesheet" href="{{ url_for('static', filename='assets/css/foundation.min.css') }}" />
-    <link rel="stylesheet" href="{{ url_for('static', filename='assets/css/dashboard.css') }}" />
-    <link href="http://fonts.googleapis.com/css?family=Roboto:100,400" rel="stylesheet" type="text/css">
-    <link rel="shortcut icon" href="{{ url_for('static', filename='assets/favicon.ico') }}" />
-    
-    <script src="{{ url_for('static', filename='assets/js/vendor/modernizr.js') }}"></script>
+    <title>CoREdash</title>
+    {% include 'includes/head.html' %}
   </head>
   <body>
     {% include 'includes/nav.html' %}
-    
-    <div class="row">
-      <div id="content" class="large-12 columns">
+
+    <div id="welcome" class="container">
+      <div class="row">
+        <div class="col s12 center-align">
+          <img src="{{ url_for('static', filename='assets/img/logo.png') }}" />
+        </div>
+      </div>
+      <div class="row">
+        <div class="col s12 center-align">
+          <p>Welcome back!</p>
+        </div>
       </div>
     </div>
-    
-    <script src="{{ url_for('static', filename='assets/js/vendor/jquery.js') }}"></script>
-    <script src="{{ url_for('static', filename='assets/js/foundation.min.js') }}"></script>
+
+    <script src="{{ url_for('static', filename='assets/js/signin.js') }}"></script>
     <script>
-      $(document).foundation();
-
-      function resize() {
-        $("#content").css('margin', (-1 * $("#content").height()/2) + 'px 0 0 ' + ((-1 * $("#content").width()/2)-30) + 'px');
-      }
-
-      $.when(resize()).then(function() {
-        $("#content").fadeIn();
-      });
-
-      $(window).resize(function() {
-        resize();
+      $(document).ready(function() {
+        $('#disconnect').click(helper.disconnect);
+        $('.button-collapse').sideNav();
       });
     </script>
   </body>

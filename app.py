@@ -58,6 +58,10 @@ def authenticate():
 def login():
 	return render_template('login.html', template_folder=tmpl_dir)
 
+@app.route('/disconnect')
+def logout():
+	return render_template('logout.html', template_folder=tmpl_dir)
+
 @app.route('/dashboard')
 def dashboard():
 	return render_template('dashboard.html', template_folder=tmpl_dir)

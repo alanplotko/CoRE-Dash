@@ -86,13 +86,3 @@ nav ul a {
 @media (max-width: 353px) {
 	#welcome img { display: none; }
 }
-
-/*--------------
-	Spinner
-----------------*/
-
-#spinner {
-	display: none;
-	text-align: center;
-	padding: 20px;
-}

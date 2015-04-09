@@ -6,10 +6,9 @@ var helper = (function() {
     onSignInCallback: function(authResult) {
       gapi.client.load('plus','v1').then(function() {
         if (authResult['access_token']) {
-          $('.g-signin').hide();
-          helper.profile();
-        } else if (authResult['error']) {
-          $.when($('#welcome').text("CoRE Manager")).then($('#welcome, .g-signin').fadeIn('slow'));
+          $.when($('#g-signin-wrapper, #loginForm').hide()).then(function() {
+            helper.profile();
+          });
         }
       });
     },
@@ -20,14 +19,14 @@ var helper = (function() {
       }).then(function(res) {           
         var profile = res.result;
         name = profile.displayName;
-        $('#content').css('margin-top', (-1 * $("#content").height()/2 - 84) + 'px');
-        $('#welcome').hide().text("Welcome back, " + name.split(" ")[0] + "!").fadeIn();
+        $.when($('.card-title').hide().text("Welcome back, " + name.split(" ")[0] + "!").fadeIn()).then(function() {
+          $('#spinner').fadeIn();
+        });
 
         for (var i=0; i < profile.emails.length; i++) {
           if (profile.emails[i].type === 'account') primaryEmail = profile.emails[i].value;
         }
 
-        $('#spinner').delay(1000).fadeIn('slow');
       }, function(err) {
         var error = err.result;
         $('#error').append(error.message);
@@ -35,7 +34,7 @@ var helper = (function() {
         function authenticate() {
           helper.authenticate(primaryEmail, name);
         }
-        window.setTimeout( authenticate, 5000 );
+        window.setTimeout(authenticate, 5000);
       });
     },
 

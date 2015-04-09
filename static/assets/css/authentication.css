@@ -1,0 +1,78 @@
+html, body {
+    height: 100%;
+}
+
+body {
+    background-color: #778899;
+}
+
+/*--------------
+	Login Page
+----------------*/
+
+#loginArea .card,
+#logoutArea .card,
+.card-content {
+	width: 350px;
+	height: 340px;
+	margin: 0 auto;
+}
+
+#loginArea .card-content,
+#logoutArea .card-content {
+	padding: 10px 0;
+}
+
+#logoutArea .card .card-content .card-title {
+	vertical-align: middle;	
+	display: inline-block;
+}
+
+hr.title-divider {
+	border: 1px solid #212121;
+}
+	
+#g-signin-wrapper {
+	padding-left: 20px;
+	display: inline-block;
+	vertical-align: middle;
+}
+
+#loginForm {
+	padding: 20px;
+}
+
+#loginArea a {
+	margin-top: 25px;
+}
+
+#logoutArea a {
+	margin-left: 20px;
+}
+
+#loginForm input {
+	font-size: 18px;
+}
+
+#disconnect,
+#return {
+	display: inline-block;
+}
+
+/*----------------------------
+	Robot Character Vector
+------------------------------*/
+
+#logoutArea .card.robot {
+	background: url('../img/logout.png') bottom center no-repeat #fff;
+	background-size: 250px;
+}
+
+/*--------------
+	Spinner
+----------------*/
+
+#spinner {
+	display: none;
+	padding: 42px;
+}
