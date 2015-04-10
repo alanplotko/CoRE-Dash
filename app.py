@@ -1,9 +1,17 @@
-import os
-from flask import Flask, render_template, request, redirect, url_for, session, abort
+# Flask
+from flask import Flask, render_template, request, redirect, url_for, session, abort, make_response
+
+# Authentication
+from authomatic.adapters import WerkzeugAdapter
+from authomatic import Authomatic
+from config import CONFIG
+
+# MongoDB and Sessions
 from flask.ext.session import Session
 from pymongo import MongoClient
-import logging
-import json
+
+# Miscellaneous
+import os, logging, json
 
 tmpl_dir = os.path.join(os.path.dirname(os.path.abspath(__file__)), 'templates')
 app = Flask(__name__)
@@ -18,6 +26,10 @@ SESSION_MONGODB = client
 SESSION_MONGODB_DB = "core"
 SESSION_MONGODB_COLLECT = "sessions"
 app.secret_key = '\xdcU\x8a\xaa\xc9\x1f\xbaVz\xbe\x06\xf9\xb9\xc5`~`\xee\xde\x92\x1b\xb4t\x80'
+
+# Instantiate Authomatic Object
+authomatic = Authomatic(config=CONFIG, secret=app.secret_key)
+
 app.config.from_object(__name__)
 Session(app)
 
@@ -30,33 +42,46 @@ def setup_logging():
 
 @app.route('/')
 def index():
-	if 'logged_in' in session:
-		return redirect(url_for('dashboard'))
 	return render_template('index.html', template_folder=tmpl_dir)
 
-@app.route('/authenticate', methods=['POST'])
-def authenticate():
-	if request.method == 'POST':
-		email = request.json['email']
-		name = request.json['name']
-		user = db.users.find_one({'email': email})
-		if user == None:
-			db.users.insert({
-				"name": name,
-				"email": email
-			})
-		if session.get('logged_in', None) == None:
-			_id = "session:" + str(session.sid)
-			db.sessions.update({"id": _id},	{"$set": {
-				"logged_in": "True",
-				"client_name": name,
-				"client_email": email
-			}})
-		return url_for('dashboard')
+# def authenticate(user):
+# 	email = user.email
+# 	name = user.name
+# 	user = db.users.find_one({'email': email})
+# 	if user == None:
+# 		db.users.insert({
+# 			"name": name,
+# 			"email": email
+# 		})
+# 	if session.get('logged_in') == 0:
+# 		_id = "session:" + str(session.sid)
+# 		db.sessions.update({"id": _id},	{"$set": {
+# 			"logged_in": 1,
+# 			"client_name": name,
+# 			"client_email": email
+# 		}})
 
-@app.route('/login')
+@app.route('/login', methods=['GET', 'POST'])
 def login():
-	return render_template('login.html', template_folder=tmpl_dir)
+    # We need response object for the WerkzeugAdapter.
+    response = make_response()
+    
+    # Log the user in, pass it the adapter and the provider name.
+    result = authomatic.login(WerkzeugAdapter(request, response), "google", session=session, session_saver=app.save_session(session, response))
+
+    # If there is no LoginResult object, the login procedure is still pending.
+    if result:
+        if result.user:
+            # We need to update the user to get more info.
+            result.user.update()
+        
+        #authenticate(result.user)
+
+        # The rest happens inside the template.
+        return render_template('login.html', template_folder=tmpl_dir, result=result)
+    
+    # Don't forget to return the response.
+    return response
 
 @app.route('/disconnect')
 def logout():
@@ -64,10 +89,7 @@ def logout():
 
 @app.route('/dashboard')
 def dashboard():
-	if session.get('logged_in', None) != None:
-		return render_template('dashboard.html', template_folder=tmpl_dir)
-	else:
-		abort(401)
+	return render_template('dashboard.html', template_folder=tmpl_dir)
 
 @app.errorhandler(401)
 def unauthorized(error):

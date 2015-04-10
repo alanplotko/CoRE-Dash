@@ -16,29 +16,29 @@ var helper = (function() {
     profile: function(){
       gapi.client.plus.people.get({
         'userId': 'me'
-      }).then(function(res) {           
+      }).then(function(res) {
         var profile = res.result;
         name = profile.displayName;
         $.when($('.card-title').hide().text("Welcome back, " + name.split(" ")[0] + "!").fadeIn()).then(function() {
           $('#spinner').fadeIn();
         });
 
-        for (var i=0; i < profile.emails.length; i++) {
+        /*for (var i=0; i < profile.emails.length; i++) {
           if (profile.emails[i].type === 'account') primaryEmail = profile.emails[i].value;
-        }
+        }*/
 
       }, function(err) {
         var error = err.result;
         $('#error').append(error.message);
-      }).then(function() {
+      });/*.then(function() {
         function authenticate() {
           helper.authenticate(primaryEmail, name);
         }
         window.setTimeout(authenticate, 5000);
-      });
+      });*/
     },
 
-    authenticate: function(email, name) {
+    /*authenticate: function(email, name) {
       $.ajax({
         url: "/authenticate",
         type: "POST",
@@ -51,7 +51,7 @@ var helper = (function() {
           window.location.replace(result);
         }
       });
-    },
+    },*/
 
     disconnect: function() {
       // Revoke the access token.
