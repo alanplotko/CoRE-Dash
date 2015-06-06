@@ -9,3 +9,8 @@ A web application to enable members and alumni of Binghamton University's CoRE (
 - Organize, host, and attend events
   - Members can upload their class eschedules to help in event planning
   - Members can list recurring times in which they have commitments to clubs and other activities in which they cannot attend an event
+- Upload documents
+  - Use Google Drive API to fetch CoRE documents for reading
+  - Integrate forms into the application rather than sending links via email
+- Send automated emails via the application for CoRE meetings
+- Manage member lists via the application
