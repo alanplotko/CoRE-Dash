@@ -1,4 +1,4 @@
-# CoRE-Manager
+# CoREdash
 
 A web application to enable members and alumni of Binghamton University's CoRE (Computers, Robotics, and Engineering) Living/Learning Community to stay in touch and organize events. CoRE is a Special Interest Housing option that consists of members who share interests in computers, robotics, and engineering.
 
