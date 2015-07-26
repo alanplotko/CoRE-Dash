@@ -59,6 +59,10 @@ hr.title-divider {
 	display: inline-block;
 }
 
+.g-signin img {
+	width: 125px;
+}
+
 /*----------------------------
 	Robot Character Vector
 ------------------------------*/

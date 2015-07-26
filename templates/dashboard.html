@@ -18,14 +18,14 @@
       <div class="row">
         <div class="col s12 center-align">
           <p>Welcome back!</p>
+          <p>{{ result.user.credentials }}</p>
+          <p>{{ session }}</p>
         </div>
       </div>
     </div>
 
-    <script src="{{ url_for('static', filename='assets/js/signin.js') }}"></script>
     <script>
       $(document).ready(function() {
-        $('#disconnect').click(helper.disconnect);
         $('.button-collapse').sideNav();
       });
     </script>

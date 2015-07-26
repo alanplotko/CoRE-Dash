@@ -3,7 +3,7 @@ html, body {
 }
 
 body {
-    background-color: #FBFBFB;
+    background-color: #eee;
 }
 
 /*--------------
@@ -59,7 +59,7 @@ nav ul a {
 
 #welcome p {
 	font-family: 'Roboto', sans-serif;
-	font-size: 28px;
+	font-size: 24px;
 }
 
 #welcome img {
