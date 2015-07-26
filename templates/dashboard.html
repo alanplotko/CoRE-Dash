@@ -16,10 +16,9 @@
         </div>
       </div>
       <div class="row">
-        <div class="col s12 center-align">
-          <p>Welcome back!</p>
-          <p>{{ result.user.credentials }}</p>
-          <p>{{ session }}</p>
+        <div class="card col s12 center-align">
+          <p>Welcome back, {{ session['display_name'] }}!</p>
+          <p>Registered email: {{ session['username'] }}</p>
         </div>
       </div>
     </div>

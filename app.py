@@ -9,12 +9,14 @@ from config import CONFIG
 # MongoDB and Sessions
 from flask.ext.session import Session
 from pymongo import MongoClient
+from functools import wraps
+from datetime import datetime
+from time import time
 
 # Miscellaneous
 import os, logging, json, sys
 
 tmpl_dir = os.path.join(os.path.dirname(os.path.abspath(__file__)), 'templates')
-app = Flask(__name__)
 
 # MongoDB Setup
 client = MongoClient(os.getenv('MONGOHQ_URL'))
@@ -25,11 +27,13 @@ SESSION_TYPE = 'mongodb'
 SESSION_MONGODB = client
 SESSION_MONGODB_DB = "core"
 SESSION_MONGODB_COLLECT = "sessions"
+SESSION_USE_SIGNER = True
+SESSION_KEY_PREFIX = "session:"
+
+# Instantiate Authomatic Object and set up app
+app = Flask(__name__)
 app.secret_key = '\xdcU\x8a\xaa\xc9\x1f\xbaVz\xbe\x06\xf9\xb9\xc5`~`\xee\xde\x92\x1b\xb4t\x80'
-
-# Instantiate Authomatic Object
 authomatic = Authomatic(config=CONFIG, secret=app.secret_key)
-
 app.config.from_object(__name__)
 Session(app)
 
@@ -40,36 +44,46 @@ def setup_logging():
         app.logger.addHandler(logging.StreamHandler())
         app.logger.setLevel(logging.INFO)
 
+def getCredentials():
+    credentials = session.get('credentials', None)
+    if credentials:
+        credentials = authomatic.credentials(credentials)
+        return credentials
+    return None
+
+def login_required(f):
+    @wraps(f)
+    def decorated_function(*args, **kwargs):
+        credentials = getCredentials()
+        if not credentials or not credentials.valid:
+            return redirect(url_for('login', next=request.url))
+
+        # If credentials are valid and expire in 30 minutes, refresh
+        elif credentials and credentials.valid and credentials.expire_soon(30 * 60):
+            response = credentials.refresh()
+
+        return f(*args, **kwargs)
+    return decorated_function
+
 @app.route('/')
 def index():
-    return render_template('index.html', template_folder=tmpl_dir, session=session)
-
-def verify(user):
-    email = user.email
-    name = user.name
-    user = db.users.find_one({'email': email})
-    if user == None:
-        db.users.insert({
-            "name": name,
-            "email": email
-        })
-    # if session.get('logged_in'):
-    #     _id = "session:" + str(session.sid)
-    #     db.sessions.update({"id": _id}, {"$set": {
-    #         "logged_in": 1,
-    #         "client_name": name,
-    #         "client_email": email
-    #     }})
+    credentials = getCredentials()
+    if credentials and credentials.valid:
+        return redirect(url_for('dashboard'))
+    return render_template('index.html', template_folder=tmpl_dir)
 
 @app.route('/login')
 def login():
-    return render_template('login.html', template_folder=tmpl_dir, session=session)
+    credentials = getCredentials()
+    if credentials and credentials.valid:
+        return redirect(url_for('dashboard'))
+    return render_template('login.html', template_folder=tmpl_dir, credentials=credentials)
 
 @app.route('/oauth2callback', methods=['GET', 'POST'])
 def authenticate():
     # We need response object for the WerkzeugAdapter.
     response = make_response()
-    
+
     # Log the user in, pass it the adapter and the provider name.
     result = authomatic.login(
         WerkzeugAdapter(request, response),
@@ -78,41 +92,55 @@ def authenticate():
         session_saver=app.save_session(session, response)
     )
 
-    # If there is no LoginResult object, the login procedure is still pending.
+    # If there is no LoginResult object, the login procedure is still pending
     if result:
         if result.user:
-            # We need to update the user to get more info.
+            # We need to update the user to get more info
             result.user.update()
-        
-        #verify(result.user)
 
-        # The rest happens inside the template.
-        return dashboard(result)
-    
-    # Don't forget to return the response.
+            # Store authomatic credentials in session
+            session['credentials'] = authomatic.credentials(result.user.credentials).serialize()
+
+            # Create new account if user is not found
+            account = db.users.find_one({'email': result.user.email })
+            if account == None:
+                db.users.insert({
+                    "name": result.user.name,
+                    "email": result.user.email
+                })
+
+            # Store user information in session
+            session['username'] = result.user.email
+            session['display_name'] = result.user.name.split(' ')[0]
+
+            credentials = getCredentials()
+            return render_template('process_login.html')
+
+    # Don't forget to return the response
     return response
 
-@app.route('/disconnect')
+@app.route('/logout')
 def logout():
-    return render_template('logout.html', template_folder=tmpl_dir)
+    db.sessions.remove({ "id": app.config.get('SESSION_KEY_PREFIX') + session.sid })
+    session.clear()
+    return redirect(url_for('index'))
 
 @app.route('/dashboard')
-def dashboard(result=None):
-    if result is None:
-        return redirect(url_for('login'))
-    else:
-        return render_template('dashboard.html', template_folder=tmpl_dir, result=result)
+@login_required
+def dashboard():
+    credentials = getCredentials()
+    return render_template('dashboard.html', template_folder=tmpl_dir, credentials=credentials)
 
 @app.errorhandler(401)
 def unauthorized(error):
-    return render_template('error.html', template_folder=tmpl_dir, error=401, error_msg="Unauthorized", 
-        return_home="You must be logged in to access this page!"    
+    return render_template('error.html', template_folder=tmpl_dir, error=401, error_msg="Unauthorized",
+        return_home="You must be logged in to access this page!"
     )
 
 @app.errorhandler(500)
 def internal_server(e):
-    return render_template('error.html', template_folder=tmpl_dir, error=500, error_msg="Internal Server Error", 
-        return_home="The gears must have gotten stuck. Let us know if it happens again!"    
+    return render_template('error.html', template_folder=tmpl_dir, error=500, error_msg="Internal Server Error",
+        return_home="The gears must have gotten stuck. Let us know if it happens again!"
     )
 
 @app.errorhandler(404)

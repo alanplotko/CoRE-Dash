@@ -13,7 +13,7 @@
         <div class="card-content center-align">
           <div id="title-wrapper">
             <span class="card-title grey-text text-darken-4">CoREdash Login</span>
-            {% if not session.user %}
+            {% if not credentials.user %}
             <div id="g-signin-wrapper">
               <div class="g-signin">
                 <a href="{{ url_for('authenticate') }}"><img src="{{ url_for('static', filename='assets/img/g-signin.png') }}" /></a>
@@ -22,17 +22,17 @@
             {% endif %}
           </div>
           <hr class="title-divider" />
-          {% if session.error %}
-            <div id="error">{{ session.error.message }}</div>
+          {% if credentials.error %}
+            <div id="error">{{ credentials.error.message }}</div>
           {% endif %}
           <div class="row center-align">
             <div id="spinner">
               <img src="{{ url_for('static', filename='assets/img/gears.svg') }}" />
             </div>
-            {% if session.user %}
-              <p>Hi {{ session.user.name }}</p>
-              <p>Your id is: {{ session.user.id }}</p>
-              <p>Your email is: {{ session.user.email }}</p>
+            {% if credentials.user %}
+              <p>Hi {{ credentials.user.name }}</p>
+              <p>Your id is: {{ credentials.user.id }}</p>
+              <p>Your email is: {{ credentials.user.email }}</p>
             {% else %}
               <form id="loginForm" class="col s12">
                 <div class="input-field col s12">
