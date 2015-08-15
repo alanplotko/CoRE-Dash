@@ -3,7 +3,7 @@ All notable changes to this project will be documented in this file. This projec
 
 ## Planned Features
 
-- ~~Google Sign-in~~ >> **Added in 0.1.0-alpha**
+- ~~Google Sign-in~~ >> **Added in v0.1.0-alpha**
 - Web chat
 - Organize, host, and attend events
   - Members can upload their class eschedules to help in event planning
