@@ -6,7 +6,7 @@ CoREdash is a web application that serves to enable members and alumni of Bingha
 
 ## Planned Features
 
-- ~~Google Sign-in~~ >> Added in 0.1.0-alpha
+- ~~Google Sign-in~~ >> **Added in 0.1.0-alpha**
 - Web chat
 - Organize, host, and attend events
   - Members can upload their class eschedules to help in event planning
