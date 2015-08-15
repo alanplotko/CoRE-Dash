@@ -104,7 +104,10 @@ def authenticate():
             # Create new account if user is not found
             account = db.users.find_one({'email': result.user.email })
             if account == None:
-                return abort(401)
+                del session['credentials']
+                return make_response(render_template('error.html', template_folder=tmpl_dir, error=401, error_msg="Unauthorized", 
+                    return_home="We couldn't find you on the CoRE member list. You must be a CoRE member to access \
+                    CoREdash. Check with the secretary if you believe this is a mistake."), 401)
             else:
                 # Store user information in session
                 session['username'] = result.user.email
