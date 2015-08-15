@@ -104,25 +104,28 @@ def authenticate():
             # Create new account if user is not found
             account = db.users.find_one({'email': result.user.email })
             if account == None:
-                db.users.insert({
-                    "name": result.user.name,
-                    "email": result.user.email
-                })
+                return abort(401)
+            else:
+                # Store user information in session
+                session['username'] = result.user.email
+                
+                if account.get('name') is None:
+                    db.users.update({ 'email': result.user.email }, { '$set': { 'name': result.user.name } }, upsert=False)
 
-            # Store user information in session
-            session['username'] = result.user.email
-            session['display_name'] = result.user.name.split(' ')[0]
+                session['display_name'] = result.user.name.split(' ')[0]
 
-            credentials = getCredentials()
-            return render_template('process_login.html')
+                credentials = getCredentials()
+                return render_template('process_login.html')
 
     # Don't forget to return the response
     return response
 
 @app.route('/logout')
 def logout():
-    db.sessions.remove({ "id": app.config.get('SESSION_KEY_PREFIX') + session.sid })
-    session.clear()
+    credentials = getCredentials()
+    if credentials and credentials.valid:
+        db.sessions.remove({ "id": app.config.get('SESSION_KEY_PREFIX') + session.sid })
+        session.clear()
     return redirect(url_for('index'))
 
 @app.route('/dashboard')
@@ -134,7 +137,7 @@ def dashboard():
 @app.errorhandler(401)
 def unauthorized(error):
     return render_template('error.html', template_folder=tmpl_dir, error=401, error_msg="Unauthorized",
-        return_home="You must be logged in to access this page!"
+        return_home="You must be a CoRE member to access this page!"
     )
 
 @app.errorhandler(500)
