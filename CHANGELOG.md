@@ -13,7 +13,7 @@ All notable changes to this project will be documented in this file. This projec
   - Integrate forms into the application rather than sending links via email
 - Send automated emails via the application for CoRE meetings
 - Manage member lists via the application
-  - Send verification email (via SendGrid?) with token in url (/resend/insert-token-here)
+  - Send verification email (via SendGrid?) with token in url (/verify/insert-token-here)
 
 ## v0.1.1-alpha / 2015-08-15
 - [Bugfix] Fix issue in which unauthorized users did not have their sessions cleared and were redirected to an empty dashboard page
