@@ -10,6 +10,44 @@ Just visit the website. CoRE embers can sign in with Google using their Binghamt
 
 Note: For the duration of alpha development, access will only be given to CoRE members contributing to project development and testing.
 
+## Technologies & Setup
+
+CoREdash runs in Python 3 on Flask and MongoDB. You can checkout the modules in use in [requirements.txt](https://github.com/alanplotko/CoREdash/blob/master/requirements.txt). I particularly use Python 3.4.3.
+
+After forking the project, create a virtual environment and install the requirements listed in the aforementioned file.
+
+1) Install virtualenv if you have not already.
+
+```
+pip install virtualenv
+```
+
+2) Create a virtual environment in your project directory.
+
+```
+virtualenv venv
+```
+
+3) Activate the virtual environment.
+
+```
+source venv/bin/activate
+```
+
+4) Install requirements from requirements.txt
+
+```
+pip install -r /path/to/requirements.txt
+```
+
+5) Run CoREdash. I use an alias (python=python3) when working in a Linux environment. Be sure to appropriately modify these commands based on your environment (i.e. using python3 or pip3 where appropriate and so on).
+
+```
+python app.py
+```
+
+TODO: Discuss environment variables.
+
 ## Contributing
 
 CoRE Members: fork it and feel free to submit a pull request! If you have any feature ideas, send me an email!
