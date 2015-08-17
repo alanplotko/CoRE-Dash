@@ -6,7 +6,7 @@ CoREdash is a web application that serves to enable members and alumni of Bingha
 
 ## Usage
 
-Just visit the website. CoRE embers can sign in with Google using their Binghamton University email address. After logging in, members can navigate and interact with the web application.
+Just visit the website. CoRE members can sign in with Google using their Binghamton University email address. After logging in, members can navigate and interact with the web application.
 
 Note: For the duration of alpha development, access will only be given to CoRE members contributing to project development and testing.
 
