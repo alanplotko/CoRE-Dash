@@ -25,14 +25,14 @@ db = client.core
 # MongoDB Session Setup
 SESSION_TYPE = 'mongodb'
 SESSION_MONGODB = client
-SESSION_MONGODB_DB = "core"
-SESSION_MONGODB_COLLECT = "sessions"
+SESSION_MONGODB_DB = os.getenv('MONGOHQ_DB')
+SESSION_MONGODB_COLLECT = os.getenv('MONGOHQ_SESSIONS')
 SESSION_USE_SIGNER = True
-SESSION_KEY_PREFIX = "session:"
+SESSION_KEY_PREFIX = os.getenv('MONGOHQ_PREFIX')
 
 # Instantiate Authomatic Object and set up app
 app = Flask(__name__)
-app.secret_key = '\xdcU\x8a\xaa\xc9\x1f\xbaVz\xbe\x06\xf9\xb9\xc5`~`\xee\xde\x92\x1b\xb4t\x80'
+app.secret_key = os.getenv('APP_SECRET_KEY')
 authomatic = Authomatic(config=CONFIG, secret=app.secret_key)
 app.config.from_object(__name__)
 Session(app)
