@@ -16,7 +16,7 @@ CoREdash runs in Python 3 on Flask and MongoDB. You can checkout the modules in 
 
 ## Setup
 
-After forking the project, set the following environment variables:
+After forking the project, set the following environment variables. Make sure to replace the current variable names in the project with the names you choose for your fork (i.e. I may use "COREDASH_APP_SECRET" whereas you may use "YOURAPPNAME_SECRET", so you'll need to rename the variable in the fork and use that variable name consistently in your development environment).
 
 config.py
 - consumer_key:  Consumer key for google sign in
