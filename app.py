@@ -19,20 +19,20 @@ import os, logging, json, sys
 tmpl_dir = os.path.join(os.path.dirname(os.path.abspath(__file__)), 'templates')
 
 # MongoDB Setup
-client = MongoClient(os.getenv('MONGOHQ_URL'))
+client = MongoClient(os.getenv('COREDASH_MONGOHQ_URL'))
 db = client.core
 
 # MongoDB Session Setup
 SESSION_TYPE = 'mongodb'
 SESSION_MONGODB = client
-SESSION_MONGODB_DB = os.getenv('MONGOHQ_DB')
-SESSION_MONGODB_COLLECT = os.getenv('MONGOHQ_SESSIONS')
+SESSION_MONGODB_DB = os.getenv('COREDASH_MONGOHQ_DB')
+SESSION_MONGODB_COLLECT = os.getenv('COREDASH_MONGOHQ_SESSIONS')
 SESSION_USE_SIGNER = True
-SESSION_KEY_PREFIX = os.getenv('MONGOHQ_PREFIX')
+SESSION_KEY_PREFIX = os.getenv('COREDASH_MONGOHQ_PREFIX')
 
 # Instantiate Authomatic Object and set up app
 app = Flask(__name__)
-app.secret_key = os.getenv('APP_SECRET_KEY')
+app.secret_key = os.getenv('COREDASH_APP_SECRET')
 authomatic = Authomatic(config=CONFIG, secret=app.secret_key)
 app.config.from_object(__name__)
 Session(app)
